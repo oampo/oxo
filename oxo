@@ -4,6 +4,9 @@ import os.path
 import re
 
 import pystache
+from pygments import highlight
+from pygments.lexers import JavascriptLexer
+from pygments.formatters import HtmlFormatter
 
 class OXO:
     def __init__(self):
@@ -18,7 +21,9 @@ class OXO:
         for fileName in fileNames:
             files.append(OXOFile(fileName))
 
-        print View(files).render()
+        outFile = open(sys.argv[-1], 'w')
+        outFile.write(View(files).render())
+        outFile.close()
 
 class View(pystache.View):
     template_name = "oxo"
@@ -44,11 +49,11 @@ class View(pystache.View):
 
                 comment = section["comment"]
                 commentDict["body"] = comment.formatted()
-                commentDict["tags"] = []
+                commentDict["tag"] = []
 
                 for tag in comment.tags:
                     tagDict = {}
-                    commentDict["tags"].append(tagDict)
+                    commentDict["tag"].append(tagDict)
                     tagDict["name"] = tag.name
                     tagDict["body"] = tag.body
                     
@@ -98,7 +103,7 @@ class Code:
         self.code = code.strip()
 
     def formatted(self):
-        return self.code
+        return highlight(self.code, JavascriptLexer(), HtmlFormatter())
 
 class Comment:
     def __init__(self, commentString):
@@ -140,7 +145,7 @@ class Tag:
         parts = tagString.split()
         self.name = parts[0][1:]
 
-        self.body = parts[1:]   
+        self.body = " ".join(parts[1:])
 
 if __name__ == "__main__":
     OXO()

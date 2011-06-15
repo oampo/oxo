@@ -1,8 +1,33 @@
-{{#file}}
-<div class="left">
-    {{name}}
-</div>
-<div class="right">
-    {{fileName}}
-</div>
-{{/file}}
+<html>
+    <head>
+        <link rel="stylesheet" href="css/pygments/friendly.css" />
+    </head>
+    <body>
+        {{#file}}
+        <div class="left">
+            {{name}}
+        </div>
+        <div class="right">
+            {{fileName}}
+        </div>
+        {{#content}}
+        <div class="left">
+            {{#comment}}
+            {{body}}
+            <ul>
+                {{#tag}}
+                <li>
+                    <strong>{{name}}</strong> {{body}}
+                </li>
+                {{/tag}}
+            </ul>
+            {{/comment}}
+        </div>
+        <div class="right">
+            {{{code}}} 
+        </div>
+        {{/content}}
+            
+        {{/file}}
+    </body>
+</html>
