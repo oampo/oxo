@@ -81,7 +81,7 @@ class View(pystache.View):
             sectionDict = {}
             sectionList.append(sectionDict)
             sectionDict["title"] = section.title
-            sectionDict["description"] = section.description
+            sectionDict["description"] = markdown2.markdown(section.description)
             fileList = []
             sectionDict["file"] = fileList
             for jsFile in section.files:
