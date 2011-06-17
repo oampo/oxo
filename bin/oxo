@@ -1,0 +1,5 @@
+#! /usr/bin/env python
+import oxo.oxo
+
+if __name__ == "__main__":
+    oxo.oxo.OXO()
