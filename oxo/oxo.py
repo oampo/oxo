@@ -15,7 +15,7 @@ class OXO:
         # Input files
         parser = argparse.ArgumentParser()
         parser.add_argument("-t", "--title", default="Documentation")
-        parser.add_argument("-d", "--description")
+        parser.add_argument("-d", "--description", default="")
         parser.add_argument("-s", "--section-title", action="append")
         parser.add_argument("-i", "--infile", nargs="+", required=True,
                             action="append", type=argparse.FileType('r'))
@@ -37,7 +37,8 @@ class OXO:
             for jsFile in args.infile[0]:
                 files.append(OXOFile(jsFile))
 
-        args.outfile.write(View(args.title, files, sections).render())
+        args.outfile.write(View(args.title, args.description,
+                                files, sections).render())
         args.outfile.close()
 
         # Copy over css and js directories
@@ -56,9 +57,10 @@ class OXO:
 class View(pystache.View):
     template_name = "oxo"
     template_path = os.path.join(os.path.dirname(__file__), "resources")
-    def __init__(self, title, files, sections):
+    def __init__(self, title, description, files, sections):
         pystache.View.__init__(self)
         self.pageTitle = title
+        self.pageDescription = description
         self.files = files
         self.sections = sections
 
@@ -83,6 +85,9 @@ class View(pystache.View):
 
     def title(self):
         return self.pageTitle
+
+    def description(self):
+        return markdown2.markdown(self.pageDescription)
 
 
     def fileDict(self, jsFile):
