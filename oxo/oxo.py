@@ -2,6 +2,7 @@
 import os.path
 import re
 import argparse
+import distutils.dir_util
 
 import pystache
 from pygments import highlight
@@ -39,8 +40,22 @@ class OXO:
         args.outfile.write(View(args.title, files, sections).render())
         args.outfile.close()
 
+        # Copy over css and js directories
+        outputDirectory = os.path.dirname(args.outfile.name)
+        resourceDirectory = os.path.join(os.path.dirname(__file__),
+                                         "resources")
+        
+        cssInputDirectory = os.path.join(resourceDirectory, "css")
+        cssOutputDirectory = os.path.join(outputDirectory, "css")
+        jsInputDirectory = os.path.join(resourceDirectory, "js")
+        jsOutputDirectory = os.path.join(outputDirectory, "js")
+        distutils.dir_util.copy_tree(cssInputDirectory, cssOutputDirectory)
+        distutils.dir_util.copy_tree(jsInputDirectory, jsOutputDirectory)
+
+
 class View(pystache.View):
     template_name = "oxo"
+    template_path = os.path.join(os.path.dirname(__file__), "resources")
     def __init__(self, title, files, sections):
         pystache.View.__init__(self)
         self.pageTitle = title
