@@ -17,6 +17,7 @@ class OXO:
         parser.add_argument("-t", "--title", default="Documentation")
         parser.add_argument("-d", "--description", default="")
         parser.add_argument("-s", "--section-title", action="append")
+        parser.add_argument("-a", "--section-description", action="append")
         parser.add_argument("-i", "--infile", nargs="+", required=True,
                             action="append", type=argparse.FileType('r'))
         parser.add_argument("-o", "--outfile", required=True,
@@ -27,12 +28,16 @@ class OXO:
         sections = []
         files = []
         if args.section_title:
-            if len(args.section_title) != len(args.infile):
+            if not (len(args.section_title) ==
+                    len(args.section_description) ==
+                    len(args.infile)):
                 parser.print_help()
                 exit(0)
             sections = []
-            for title, infiles in zip(args.section_title, args.infile):
-                sections.append(Section(title, infiles))
+            for title, description, infiles in zip(args.section_title,
+                                                   args.section_description,
+                                                   args.infile):
+                sections.append(Section(title, description, infiles))
         else:
             for jsFile in args.infile[0]:
                 files.append(OXOFile(jsFile))
@@ -76,6 +81,7 @@ class View(pystache.View):
             sectionDict = {}
             sectionList.append(sectionDict)
             sectionDict["title"] = section.title
+            sectionDict["description"] = section.description
             fileList = []
             sectionDict["file"] = fileList
             for jsFile in section.files:
@@ -117,8 +123,9 @@ class View(pystache.View):
         return fileDict
                     
 class Section:
-    def __init__(self, title, files):
+    def __init__(self, title, description, files):
         self.title = title
+        self.description = description
         self.files = []
         for jsFile in files:
             self.files.append(OXOFile(jsFile))
