@@ -5,17 +5,17 @@ body {
 }
 
 h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: normal;
 }
 
 h2 {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: normal;
 }
 
 h3 {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: normal;
 }
 
@@ -69,13 +69,18 @@ div.right {
 }
 
 div.left div {
-    padding: 4%;
+    padding: 6%;
 }
 
 div.right div {
-    padding: 4%;
+    padding: 6%;
 }
 
 div.clear {
     clear: both;
+}
+
+div.file div.header div.right {
+    font-size: 12px;
+    font-style: italic;
 }
