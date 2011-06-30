@@ -142,6 +142,8 @@ class OXOFile:
         self.parse(text)
 
     def parse(self, text):
+        # Remove /*! comment */ sections
+        text = re.sub("/\*!.*?\*/", "", text, flags=re.DOTALL)
         section = {"code": None, "comment": None}
         while 1:
             code, sep, after = text.partition("/*")
@@ -149,7 +151,7 @@ class OXOFile:
             if code.strip():
                 section["code"] = Code(code)
 
-            if (section["comment"] or section["code"]):
+            if (section["comment"] and section["code"]):
                 self.content.append(section)
                 section = {"code": "", "comment": ""}
 
@@ -158,8 +160,7 @@ class OXOFile:
 
             comment, sep, text = after.partition("*/")
 
-            if comment[0] != "!":
-                section["comment"] = Comment(comment)
+            section["comment"] = Comment(comment)
 
 class Code:
     def __init__(self, codeString):
